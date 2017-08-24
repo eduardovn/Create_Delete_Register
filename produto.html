@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="produtoModule">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Sistema de Cadastro de Produtos</title>
+	
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+		
+	<script src="control/produto.js"></script>
+  </head>
+  <body ng-controller="produtoControl">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Cadastro</a></li>
+    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Dados</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="home">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label for="codigo" class="col-sm-1 control-label">Código</label>
+				<div  class="col-sm-3">
+					<input id="codigoProduto" type="code" class="form-control" ng-model="novosProdutos.codigo" placeholder="Código">
+				</div>	
+			</div>
+			<div class="form-group">
+				<label for="nome" class="col-sm-1 control-label">Nome</label>
+				<div  class="col-sm-3">
+					<input type="text" class="form-control" ng-model="novosProdutos.nome" placeholder="Nome">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="valor" class="col-sm-1 control-label">Valor</label>
+				<div  class="col-sm-3">
+					<input type="text" class="form-control" ng-model="novosProdutos.valor" placeholder="Valor">
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="fornecedor" class="col-sm-1 control-label">Fornecedor</label>
+				<div  class="col-sm-3">
+					<select class="form-control"
+						ng-options="fornecedor.nome for fornecedor in fornecedores track by fornecedor.codigo"
+						ng-model="novosProdutos.fornecedor"
+						ng-selected="novosProdutos.fornecedor">
+						<option ng-if="!novosProdutos.fornecedor" value="">Escolha um fornecedor</option>
+					</select>
+				</div>
+			</div>
+			<button id="botaoAdicionar" type="submit" class="btn btn-default" ng-disabled="!novosProdutos.codigo" ng-click="adicionar();">Adicionar</button>
+		</form>	
+	</div>
+    <div role="tabpanel" class="tab-pane" id="profile">
+		<table class="table table-hover">
+			<th>
+				<a href="#" ng-click="orderByField='codigo'; reverseSort = !reverseSort">
+					Código <span ng-show="orderByField == 'codigo'">
+					<span ng-show="!reverseSort">^</span>
+					<span ng-show="reverseSort">v</span></span>
+				</a>
+			</th>
+			<th>
+				<a href="#" ng-click="orderByField='nome'; reverseSort = !reverseSort">
+					Código <span ng-show="orderByField == 'nome'">
+					<span ng-show="!reverseSort">^</span>
+					<span ng-show="reverseSort">v</span></span>
+				</a>
+			</th>
+			<th>
+				<a href="#" ng-click="orderByField='fornecedor.nome'; reverseSort = !reverseSort">
+					Fornecedor <span ng-show="orderByField == 'fornecedor.nome'">
+					<span ng-show="!reverseSort">^</span>
+					<span ng-show="reverseSort">v</span></span>
+				</a>
+			</th>
+			<th>
+				<a href="#" ng-click="orderByField='valor'; reverseSort = !reverseSort">
+					Valor <span ng-show="orderByField == 'valor'">
+					<span ng-show="!reverseSort">^</span>
+					<span ng-show="reverseSort">v</span></span>
+				</a>
+			</th>
+			<th>Excluir Registro</th>
+			<tr ng-repeat="produtoTabela in produtos | orderBy:orderByField:reverseSort" >
+				<td>{{produtoTabela.codigo}}</td>
+				<td>{{produtoTabela.nome}}</td>
+				<td>{{produtoTabela.fornecedor.nome}}</td>
+				<td>{{produtoTabela.valor}}</td>
+				<td>
+					<button type="button" class="btn btn-danger" ng-click="excluir(produtoTabela);">Excluir</button>
+				</td>
+			</tr>	
+		</table>
+		<label for="total" class="col-sm-2 control-label">Total em Conta:</label>
+		<div  class="col-sm-2" ng-bind="produtos| soma: 'valor'"></div>
+	</div>
+  </div>
+  </body>
+
+</html>
